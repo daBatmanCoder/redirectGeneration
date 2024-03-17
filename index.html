@@ -6,6 +6,7 @@
         window.onload = function() {
             const params = new URLSearchParams(window.location.search);
             const redirectUrl = params.get('redirect');
+            console.log(redirectUrl);
             if (redirectUrl) {
                 window.location.href = redirectUrl;
             }
