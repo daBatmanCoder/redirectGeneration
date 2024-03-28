@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <script type="text/javascript">
         window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
             const redirectUrl = params.get('redirect');
-            console.log(redirectUrl);
-            if (redirectUrl) {
+            const sessionId = params.get('session_id'); // Capture the session_id parameter
+
+            if (redirectUrl && sessionId) {
+                const deepLinkWithSessionId = `${redirectUrl}?session_id=${sessionId}`;
+                window.location.href = deepLinkWithSessionId;
+            } else if (redirectUrl) {
+                // If there's no session ID, just redirect to the original deep link
                 window.location.href = redirectUrl;
             }
         };
