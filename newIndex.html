@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript">
+    import { buildMimcSponge } from 'https://cdn.jsdelivr.net/npm/circomlibjs@0.1.7/+esm';
+    import * as ethers from "https://cdn.jsdelivr.net/npm/ethers@6.11.1/dist/ethers.min.js";
+        window.onload = async function() {
+            const params = new URLSearchParams(window.location.search);
+            const redirectUrl = params.get('redirect');
+            const sessionId = params.get('product_id'); // Capture the session_id parameter
+
+            const commitment = await generateCommitment(sessionId)
+            const text = document.createElement("p")
+            text.textContent = commitment.commitment
+            if (redirectUrl && sessionId) {
+                const deepLinkWithSessionId = `${redirectUrl}?session_id=${sessionId}`;
+                window.location.href = deepLinkWithSessionId;
+            } else if (redirectUrl) {
+                // If there's no session ID, just redirect to the original deep link
+                window.location.href = redirectUrl;
+            }
+        };
+        async function generateCommitment(prod_id) {
+            const mimc = await buildMimcSponge();
+            const nullifier = ethers.toBigInt(generateRandomBytes(31)).toString();
+            const secret = ethers.toBigInt(generateRandomBytes(31)).toString();
+            const preCommitment = mimc.F.toString(mimc.multiHash([nullifier, secret]));
+            const commitment = mimc.F.toString(mimc.multiHash([commitment, prod_id]))
+            const nullifierHash = mimc.F.toString(mimc.multiHash([nullifier]));
+            return {
+                nullifier: nullifier,
+                secret: secret,
+                commitment: commitment,
+                nullifierHash: nullifierHash
+            };
+        }
+        function generateRandomBytes(length) {
+            const randomBytes = new Uint8Array(length);
+            window.crypto.getRandomValues(randomBytes);
+            return randomBytes;
+        }
+</script>
+</head>
+<body>
+</body>
+</html>
