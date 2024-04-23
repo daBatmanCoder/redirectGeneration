@@ -26,13 +26,11 @@
             const nullifier = ethers.toBigInt(generateRandomBytes(31)).toString();
             const secret = ethers.toBigInt(generateRandomBytes(31)).toString();
             const preCommitment = mimc.F.toString(mimc.multiHash([nullifier, secret]));
-            const commitment = mimc.F.toString(mimc.multiHash([commitment, prod_id]))
-            const nullifierHash = mimc.F.toString(mimc.multiHash([nullifier]));
+            const commitment = mimc.F.toString(mimc.multiHash([preCommitment, prod_id]))
             return {
                 nullifier: nullifier,
                 secret: secret,
                 commitment: commitment,
-                nullifierHash: nullifierHash
             };
         }
         function generateRandomBytes(length) {
